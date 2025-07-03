@@ -22,33 +22,14 @@ def create_book(
 # Get All Books for Current User (with optional filter)
 @router.get("/", response_model=List[schemas.Book])
 def get_books(
-    id: Optional[int] = None,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(auth.get_current_user)
 ):
-    query = db.query(models.Book).filter(models.Book.owner_id == current_user.id)
-    if id is not None:
-        query = query.filter(models.Book.id == id)
-    return query.all()
+    return db.query(models.Book).filter(
+        models.Book.owner_id == current_user.id,
+        models.Book.archived == False
+    ).all()
 
-# Update Book (Owned by User)
-@router.put("/{book_id}", response_model=schemas.Book)
-def update_book(
-    book_id: int,
-    updated: schemas.BookCreate,
-    db: Session = Depends(get_db),
-    current_user: models.User = Depends(auth.get_current_user)
-):
-    book = db.query(models.Book).filter(
-        models.Book.id == book_id, models.Book.owner_id == current_user.id
-    ).first()
-    if not book:
-        raise HTTPException(status_code=404, detail="Book not found")
-    for field, value in updated.dict().items():
-        setattr(book, field, value)
-    db.commit()
-    db.refresh(book)
-    return book
 
 # Delete Book (Owned by User)
 @router.delete("/{book_id}")
@@ -100,3 +81,35 @@ def get_stats(
         "books_by_genre": genre_count,
         "book_progress": book_progress
     }
+
+@router.get("/archived", response_model=List[schemas.Book])
+def get_archived_books(
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    return db.query(models.Book).filter(
+        models.Book.owner_id == current_user.id,
+        models.Book.archived == True
+    ).all()
+    
+@router.put("/{book_id}", response_model=schemas.Book)
+def update_book(
+    book_id: int,
+    updated: schemas.BookCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    book = db.query(models.Book).filter(
+        models.Book.id == book_id,
+        models.Book.owner_id == current_user.id
+    ).first()
+
+    if not book:
+        raise HTTPException(status_code=404, detail="Book not found")
+
+    for field, value in updated.dict().items():
+        setattr(book, field, value)
+
+    db.commit()
+    db.refresh(book)
+    return book

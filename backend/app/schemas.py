@@ -1,37 +1,37 @@
 from pydantic import BaseModel, Field
 from typing import Optional
 
+# Base Book schema
 class BookBase(BaseModel):
     title: str
     author: str
     genre: str
-    status: str 
-    notes: Optional[str] = None
-    rating: Optional[int] = Field(None, ge=0, le=10, description="Rating must be between 0 and 10")
+    status: str
+    notes: Optional[str] = ""
+    rating: Optional[int] = Field(0, ge=0, le=10, description="Rating must be between 0 and 10")
+    pages_read: int = 0
+    total_pages: int = 0
+    archived: Optional[bool] = False
 
-
+# User registration
 class UserCreate(BaseModel):
     username: str
     password: str
 
+# Response for user
 class UserResponse(BaseModel):
     id: int
     username: str
 
     class Config:
-        from_attributes = True 
+        from_attributes = True
 
-class BookCreate(BaseModel):
-    title: str
-    author: str
-    genre: str
-    status: str
-    notes: Optional[str] = None
-    rating: Optional[int] = None
-    pages_read: int
-    total_pages: int
+# Request body to create a book
+class BookCreate(BookBase):
+    pass
 
-class Book(BookCreate):
+# Response schema for Book with ID and owner_id
+class Book(BookBase):
     id: int
     owner_id: int
 

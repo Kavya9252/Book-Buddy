@@ -1,6 +1,6 @@
 # app/models.py
 
-from sqlalchemy import Column, Integer, String, Text, ForeignKey
+from sqlalchemy import Column, Integer, String, Text, ForeignKey,Boolean
 from sqlalchemy.orm import relationship
 from .database import Base
 
@@ -22,6 +22,6 @@ class Book(Base):
     rating = Column(Integer, nullable=True)
     pages_read = Column(Integer, default=0)
     total_pages = Column(Integer, default=0)
-
+    archived = Column(Boolean, default=False)
     owner_id = Column(Integer, ForeignKey("users.id"))
     owner = relationship("User", back_populates="books")

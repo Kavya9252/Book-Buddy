@@ -1,8 +1,8 @@
-# app/routes/users.py
-
 from fastapi import APIRouter, HTTPException, Depends
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from .. import models, schemas, database, auth
+
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -26,14 +26,3 @@ def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db.refresh(new_user)
     return new_user
 
-@router.post("/login")
-def login(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    db_user = db.query(models.User).filter(models.User.username == user.username).first()
-    if not db_user or not auth.verify_password(user.password, db_user.hashed_password):
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-
-    token = auth.create_access_token(data={"sub": db_user.username})
-    return {"access_token": token, "token_type": "bearer"}
-
-# 👇 THIS IS THE LINE YOU MUST ADD AT END 👇
-__all__ = ["router"]
