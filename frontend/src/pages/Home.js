@@ -3,12 +3,30 @@ import API from "../services/api";
 import AddBook from "../components/AddBook";
 import BookList from "../components/BookList";
 import ArchivedBooks from "../components/ArchivedBooks";
-import Stats from "../components/Stats"; // ⬅ make sure this file exists
+import Stats from "../components/Stats";
+import "./Home.css";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
   const [books, setBooks] = useState([]);
   const [archivedBooks, setArchivedBooks] = useState([]);
-  const [view, setView] = useState("books"); // "books", "archived", or "stats"
+  const [view, setView] = useState("books");
+  const [username, setUsername] = useState("");
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
+  const fetchUsername = async () => {
+    try {
+      const res = await API.get("/users/me");
+      setUsername(res.data.username);
+    } catch (err) {
+      console.error("Username fetch error:", err);
+    }
+  };
 
   const fetchBooks = async () => {
     try {
@@ -26,9 +44,13 @@ export default function Home() {
       setArchivedBooks(res.data);
     } catch (err) {
       console.error("Archived fetch error:", err);
-      alert("❌ Could not fetch archived books.");
+      alert("Could not fetch archived books.");
     }
   };
+
+  useEffect(() => {
+    fetchUsername();
+  }, []);
 
   useEffect(() => {
     if (view === "books") fetchBooks();
@@ -36,24 +58,29 @@ export default function Home() {
   }, [view]);
 
   return (
-    <div>
-      <h2>📚 Welcome to Book Buddy</h2>
+    <div className="home-container">
+      <header className="home-header">
+        <h2>📚 Welcome to Book Buddy{username ? `, ${username}` : ""}!</h2>
+        <button className="logout-btn" onClick={handleLogout}>🚪 Logout</button>
+      </header>
 
-      <AddBook onAdd={fetchBooks} />
+      <section className="add-book-section">
+        <AddBook onAdd={fetchBooks} />
+      </section>
 
-      <div style={{ marginTop: "10px" }}>
+      <nav className="view-buttons">
         <button onClick={() => setView("books")}>📘 My Books</button>
         <button onClick={() => setView("archived")}>📁 Archived</button>
         <button onClick={() => setView("stats")}>📊 Stats</button>
-      </div>
+      </nav>
 
-      <div style={{ marginTop: "20px" }}>
+      <section className="view-content">
         {view === "books" && <BookList books={books} onUpdate={fetchBooks} />}
         {view === "archived" && (
           <ArchivedBooks books={archivedBooks} onUnarchive={fetchArchived} />
         )}
         {view === "stats" && <Stats />}
-      </div>
+      </section>
     </div>
   );
 }

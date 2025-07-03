@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import API from "../services/api";
+import "./BookForm.css";
 
 export default function BookForm({ fetchBooks }) {
   const [form, setForm] = useState({
@@ -37,21 +38,86 @@ export default function BookForm({ fetchBooks }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input name="title" value={form.title} onChange={handleChange} placeholder="Title" required />
-      <input name="author" value={form.author} onChange={handleChange} placeholder="Author" required />
-      <input name="genre" value={form.genre} onChange={handleChange} placeholder="Genre" required />
-      <select name="status" value={form.status} onChange={handleChange}>
-        <option value="reading">Reading</option>
-        <option value="completed">Completed</option>
-        <option value="wishlist">Wishlist</option>
-      </select>
-      <input name="rating" type="number" value={form.rating} onChange={handleChange} placeholder="Rating" />
-      <input name="pages_read" type="number" value={form.pages_read} onChange={handleChange} placeholder="Pages Read" required />
-      <input name="total_pages" type="number" value={form.total_pages} onChange={handleChange} placeholder="Total Pages" required />
-      <textarea name="notes" value={form.notes} onChange={handleChange} placeholder="Notes" />
-      <button type="submit">Add Book</button>
-    </form>
+    <div className="book-form-container">
+      <h3 className="form-title">Add New Book</h3>
+      <form onSubmit={handleSubmit} className="compact-form">
+        <div className="form-row">
+          <input 
+            name="title" 
+            value={form.title} 
+            onChange={handleChange} 
+            placeholder="Title" 
+            required 
+            className="form-input"
+          />
+          <input 
+            name="author" 
+            value={form.author} 
+            onChange={handleChange} 
+            placeholder="Author" 
+            required 
+            className="form-input"
+          />
+        </div>
+        <div className="form-row">
+          <input 
+            name="genre" 
+            value={form.genre} 
+            onChange={handleChange} 
+            placeholder="Genre" 
+            required 
+            className="form-input"
+          />
+          <select 
+            name="status" 
+            value={form.status} 
+            onChange={handleChange}
+            className="form-input"
+          >
+            <option value="reading">Reading</option>
+            <option value="completed">Completed</option>
+            <option value="wishlist">Wishlist</option>
+          </select>
+        </div>
+        <div className="form-row">
+          <input 
+            name="rating" 
+            type="number" 
+            value={form.rating} 
+            onChange={handleChange} 
+            placeholder="Rating" 
+            min="0" 
+            max="5"
+            className="form-input small-input"
+          />
+          <input 
+            name="pages_read" 
+            type="number" 
+            value={form.pages_read} 
+            onChange={handleChange} 
+            placeholder="Pages Read" 
+            required 
+            className="form-input small-input"
+          />
+          <input 
+            name="total_pages" 
+            type="number" 
+            value={form.total_pages} 
+            onChange={handleChange} 
+            placeholder="Total Pages" 
+            required 
+            className="form-input small-input"
+          />
+        </div>
+        <textarea 
+          name="notes" 
+          value={form.notes} 
+          onChange={handleChange} 
+          placeholder="Notes" 
+          className="form-textarea"
+        />
+        <button type="submit" className="submit-button">Add Book</button>
+      </form>
+    </div>
   );
 }
-

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import API from "../services/api";
 import { useNavigate } from "react-router-dom";
+import "./Register.css";
 
 export default function Register() {
   const [form, setForm] = useState({ username: "", password: "" });
@@ -12,7 +13,7 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await API.post("/users/register", form);  // ✅ correct backend path
+      await API.post("/users/register", form); 
       alert("Registered successfully! Please login.");
       navigate("/login");
     } catch (err) {
@@ -20,9 +21,10 @@ export default function Register() {
     }
   };
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <h2>Register</h2>
+return (
+  <div className="register-container">
+    <form className="register-form" onSubmit={handleSubmit}>
+      <h2>Create a Book Buddy Account</h2>
       <input
         name="username"
         value={form.username}
@@ -40,5 +42,7 @@ export default function Register() {
       />
       <button type="submit">Register</button>
     </form>
-  );
+  </div>
+);
+
 }

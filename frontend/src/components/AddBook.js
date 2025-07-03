@@ -1,6 +1,6 @@
-// src/components/AddBook.js
 import React, { useState } from "react";
 import API from "../services/api";
+import "./AddBook.css"; // This should point to the CSS that includes .book-form
 
 export default function AddBook({ onAdd }) {
   const [form, setForm] = useState({
@@ -29,7 +29,7 @@ export default function AddBook({ onAdd }) {
       };
       await API.post("/books/", payload);
       alert("✅ Book added!");
-      onAdd(); // refresh book list in Home
+      onAdd();
       setForm({
         title: "",
         author: "",
@@ -47,9 +47,9 @@ export default function AddBook({ onAdd }) {
   };
 
   return (
-    <div>
+    <div className="book-form-container">
       <h3>Add New Book</h3>
-      <form onSubmit={handleSubmit}>
+      <form className="book-form" onSubmit={handleSubmit}>
         <input name="title" value={form.title} onChange={handleChange} placeholder="Title" required />
         <input name="author" value={form.author} onChange={handleChange} placeholder="Author" required />
         <input name="genre" value={form.genre} onChange={handleChange} placeholder="Genre" required />

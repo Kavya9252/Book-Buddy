@@ -37,3 +37,17 @@ class Book(BookBase):
 
     class Config:
         orm_mode = True
+        
+class BookUpdate(BaseModel):
+    title: Optional[str]
+    author: Optional[str]
+    genre: Optional[str]
+    status: Optional[str]
+    notes: Optional[str]
+    rating: Optional[int]
+    pages_read: Optional[int]
+    total_pages: Optional[int]
+    archived: Optional[bool]
+
+    class Config:
+        from_attributes = True 

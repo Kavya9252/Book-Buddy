@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import API from "../services/api";
+import "./Stats.css"; // ✅ Add this line
 
 export default function Stats() {
   const [stats, setStats] = useState(null);
@@ -19,7 +20,7 @@ export default function Stats() {
   if (!stats) return <p>Loading stats...</p>;
 
   return (
-    <div>
+    <div className="stats-container">
       <h3>📊 Reading Stats</h3>
       <p>Total Books: {stats.total_books}</p>
       <p>Completed: {stats.completed}</p>
@@ -43,4 +44,3 @@ export default function Stats() {
     </div>
   );
 }
-
