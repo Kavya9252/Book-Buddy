@@ -10,9 +10,9 @@ export default function BookList({ books, onUpdate }) {
     genre: "",
     status: "reading",
     notes: "",
-    rating: 0,
-    pages_read: 0,
-    total_pages: 0,
+    rating: "",
+    pages_read: "",
+    total_pages: "",
   });
 
   const startEdit = (book) => {
@@ -27,43 +27,29 @@ export default function BookList({ books, onUpdate }) {
   const handleUpdate = async (id) => {
     try {
       const updated = {
-        title:       form.title,
-        author:      form.author,
-        genre:       form.genre,
-        status:      form.status,
-        notes:       form.notes || "",
-        rating:      parseInt(form.rating, 10) || 0,
-        pages_read:  parseInt(form.pages_read, 10) || 0,
-        total_pages: parseInt(form.total_pages, 10) || 0,
-        archived:    false,
+        ...form,
+        rating: form.rating ? parseFloat(form.rating) : null,
+        pages_read: form.pages_read ? parseInt(form.pages_read) : null,
+        total_pages: form.total_pages ? parseInt(form.total_pages) : null,
+        archived: false,
       };
       await API.put(`/books/${id}/`, updated);
       setEditingId(null);
       onUpdate();
     } catch (err) {
       console.error("Update error:", err.response?.data || err.message);
-      alert(" Update failed. Check console for details.");
+      alert("Update failed.");
     }
   };
 
   const handleArchive = async (book) => {
     try {
-      const updated = {
-        title:       book.title,
-        author:      book.author,
-        genre:       book.genre,
-        status:      book.status,
-        notes:       book.notes || "",
-        rating:      book.rating ?? 0,
-        pages_read:  book.pages_read ?? 0,
-        total_pages: book.total_pages ?? 0,
-        archived:    true,
-      };
+      const updated = { ...book, archived: true };
       await API.put(`/books/${book.id}/`, updated);
       onUpdate();
     } catch (err) {
       console.error("Archive error:", err);
-      alert(" Failed to archive book.");
+      alert("Failed to archive book.");
     }
   };
 
@@ -78,83 +64,55 @@ export default function BookList({ books, onUpdate }) {
   };
 
   return (
-    <div className="book-list-container">
-      <h3>Your Books</h3>
-      {books.map((book) => (
-        <div key={book.id} className="book-card">
-          <strong>{book.title}</strong> by {book.author} — <em>{book.status}</em>
-          <div className="book-meta">
-            Progress: {book.pages_read}/{book.total_pages} | Notes: {book.notes || "—"} | Rating: {book.rating || "—"}/10
-          </div>
-          <div className="book-actions">
-            <button onClick={() => startEdit(book)}>✏️ Update</button>
-            <button onClick={() => handleArchive(book)}>📥 Archive</button>
-            <button onClick={() => handleDelete(book.id)}>🗑️ Delete</button>
-          </div>
-
-          {editingId === book.id && (
-            <div className="edit-form">
-              <input
-                name="title"
-                value={form.title}
-                onChange={handleChange}
-                placeholder="Title"
-              />
-              <input
-                name="author"
-                value={form.author}
-                onChange={handleChange}
-                placeholder="Author"
-              />
-              <input
-                name="genre"
-                value={form.genre}
-                onChange={handleChange}
-                placeholder="Genre"
-              />
-              <select
-                name="status"
-                value={form.status}
-                onChange={handleChange}
-              >
-                <option value="reading">Reading</option>
-                <option value="completed">Completed</option>
-                <option value="wishlist">Wishlist</option>
-              </select>
-              <input
-                name="pages_read"
-                type="number"
-                value={form.pages_read}
-                onChange={handleChange}
-                placeholder="Pages Read"
-              />
-              <input
-                name="total_pages"
-                type="number"
-                value={form.total_pages}
-                onChange={handleChange}
-                placeholder="Total Pages"
-              />
-              <textarea
-                name="notes"
-                value={form.notes}
-                onChange={handleChange}
-                placeholder="Notes"
-              />
-              <input
-                name="rating"
-                type="number"
-                min="0"
-                max="10"
-                value={form.rating}
-                onChange={handleChange}
-                placeholder="Rating (0–10)"
-              />
-              <button onClick={() => handleUpdate(book.id)}>💾 Save</button>
-            </div>
+    <div className="book-table-container">
+      <h3>📚 Your Book List</h3>
+      <table className="book-table">
+        <thead>
+          <tr>
+            <th>📖 Title</th>
+            <th>✍️ Author</th>
+            <th>🏷️ Genre</th>
+            <th>📄 Pages</th>
+            <th>📝 Notes</th>
+            <th>⭐ Rating</th>
+            <th>⚙️ Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {books.map((book) =>
+            editingId === book.id ? (
+              <tr key={book.id}>
+                <td><input name="title" value={form.title} onChange={handleChange} /></td>
+                <td><input name="author" value={form.author} onChange={handleChange} /></td>
+                <td><input name="genre" value={form.genre} onChange={handleChange} /></td>
+                <td>
+                  <input name="pages_read" type="number" value={form.pages_read} onChange={handleChange} style={{ width: "40px" }} /> /
+                  <input name="total_pages" type="number" value={form.total_pages} onChange={handleChange} style={{ width: "40px" }} />
+                </td>
+                <td><textarea name="notes" value={form.notes} onChange={handleChange} /></td>
+                <td><input name="rating" type="number" value={form.rating} onChange={handleChange} style={{ width: "50px" }} /></td>
+                <td>
+                  <button onClick={() => handleUpdate(book.id)}>💾 Save</button>
+                </td>
+              </tr>
+            ) : (
+              <tr key={book.id}>
+                <td><em>{book.title}</em></td>
+                <td>{book.author}</td>
+                <td>{book.genre}</td>
+                <td>{book.pages_read ?? "—"} / {book.total_pages ?? "—"}</td>
+                <td>{book.notes || "—"}</td>
+                <td>{book.rating || "—"}</td>
+                <td>
+                  <button onClick={() => startEdit(book)}>✏️</button>
+                  <button onClick={() => handleArchive(book)}>📥</button>
+                  <button onClick={() => handleDelete(book.id)}>🗑️</button>
+                </td>
+              </tr>
+            )
           )}
-        </div>
-      ))}
+        </tbody>
+      </table>
     </div>
   );
 }

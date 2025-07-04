@@ -43,34 +43,34 @@ export default function BookForm({ fetchBooks }) {
       <form onSubmit={handleSubmit} className="compact-form">
         <div className="form-row">
           <input 
-            name="title" 
-            value={form.title} 
-            onChange={handleChange} 
-            placeholder="Title" 
-            required 
+            name="title"
+            value={form.title}
+            onChange={handleChange}
+            placeholder="Title"
+            required
             className="form-input"
           />
           <input 
-            name="author" 
-            value={form.author} 
-            onChange={handleChange} 
-            placeholder="Author" 
-            required 
+            name="author"
+            value={form.author}
+            onChange={handleChange}
+            placeholder="Author"
+            required
             className="form-input"
           />
         </div>
         <div className="form-row">
           <input 
-            name="genre" 
-            value={form.genre} 
-            onChange={handleChange} 
-            placeholder="Genre" 
-            required 
+            name="genre"
+            value={form.genre}
+            onChange={handleChange}
+            placeholder="Genre"
+            required
             className="form-input"
           />
           <select 
-            name="status" 
-            value={form.status} 
+            name="status"
+            value={form.status}
             onChange={handleChange}
             className="form-input"
           >
@@ -79,43 +79,45 @@ export default function BookForm({ fetchBooks }) {
             <option value="wishlist">Wishlist</option>
           </select>
         </div>
-        <div className="form-row">
+        <div className="form-row triple">
           <input 
-            name="rating" 
-            type="number" 
-            value={form.rating} 
-            onChange={handleChange} 
-            placeholder="Rating" 
-            min="0" 
+            name="rating"
+            type="number"
+            value={form.rating}
+            onChange={handleChange}
+            placeholder="Rate"
+            min="0"
             max="5"
             className="form-input small-input"
           />
           <input 
-            name="pages_read" 
-            type="number" 
-            value={form.pages_read} 
-            onChange={handleChange} 
-            placeholder="Pages Read" 
-            required 
-            className="form-input small-input"
+            name="pages_read"
+            type="number"
+            value={form.pages_read}
+            onChange={handleChange}
+            placeholder="Pages Read"
+            required
+            className="form-input"
           />
           <input 
-            name="total_pages" 
-            type="number" 
-            value={form.total_pages} 
-            onChange={handleChange} 
-            placeholder="Total Pages" 
-            required 
-            className="form-input small-input"
+            name="total_pages"
+            type="number"
+            value={form.total_pages}
+            onChange={handleChange}
+            placeholder="Total Pages"
+            required
+            className="form-input"
           />
         </div>
-        <textarea 
-          name="notes" 
-          value={form.notes} 
-          onChange={handleChange} 
-          placeholder="Notes" 
-          className="form-textarea"
-        />
+        <div className="form-row single">
+          <textarea 
+            name="notes"
+            value={form.notes}
+            onChange={handleChange}
+            placeholder="Notes"
+            className="form-textarea"
+          />
+        </div>
         <button type="submit" className="submit-button">Add Book</button>
       </form>
     </div>
