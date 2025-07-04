@@ -1,4 +1,4 @@
-📚 Book Buddy
+## Book Buddy
 
 Book Buddy is a full-stack web application to help users track their reading progress. It allows users to add books, update progress, archive completed reads, and view personalized reading statistics — all from a clean and user-friendly dashboard.
 
