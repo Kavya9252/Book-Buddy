@@ -1,5 +1,3 @@
-// src/components/ArchivedBooks.js
-
 import React from "react";
 import API from "../services/api";
 import "./ArchivedBooks.css";
@@ -7,8 +5,7 @@ import "./ArchivedBooks.css";
 export default function ArchivedBooks({ books, onUnarchive }) {
   const handleUnarchive = async (book) => {
     try {
-      // Build the full payload so no fields get reset
-      const updated = {
+   const updated = {
         title:       book.title,
         author:      book.author,
         genre:       book.genre,
@@ -19,7 +16,7 @@ export default function ArchivedBooks({ books, onUnarchive }) {
         total_pages: book.total_pages ?? 0,
         archived:    false,
       };
-      // Note the trailing slash here to match FastAPI route exactly
+      
       await API.put(`/books/${book.id}`, updated);
       onUnarchive();
     } catch (err) {
@@ -30,7 +27,7 @@ export default function ArchivedBooks({ books, onUnarchive }) {
 
   return (
     <div className="archived-container">
-      <h3>📁 Archived Books</h3>
+      <h3> Archived Books</h3>
       {books.length === 0 ? (
         <p>No archived books yet.</p>
       ) : (
@@ -48,7 +45,7 @@ export default function ArchivedBooks({ books, onUnarchive }) {
                 className="unarchive-btn"
                 onClick={() => handleUnarchive(book)}
               >
-                🔄 Unarchive
+                 Unarchive
               </button>
             </li>
           ))}

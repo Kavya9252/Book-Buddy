@@ -11,7 +11,6 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-# ✅ Allow frontend to access backend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],  
@@ -20,7 +19,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ✅ Actual /token route needed for frontend login
+
 @app.post("/token")
 def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
@@ -33,6 +32,6 @@ def login_for_access_token(
     token = auth.create_access_token(data={"sub": user.username})
     return {"access_token": token, "token_type": "bearer"}
 
-# ✅ Include other routers
+
 app.include_router(users.router)
 app.include_router(books.router)

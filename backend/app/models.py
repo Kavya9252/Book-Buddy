@@ -1,4 +1,3 @@
-# app/models.py
 
 from sqlalchemy import Column, Integer, String, Text, ForeignKey,Boolean
 from sqlalchemy.orm import relationship

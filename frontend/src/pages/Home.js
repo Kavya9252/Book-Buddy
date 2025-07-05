@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import API from "../services/api";
-import AddBook from "../components/AddBook";
+import BookForm from "../components/BookForm";
 import BookList from "../components/BookList";
 import ArchivedBooks from "../components/ArchivedBooks";
 import Stats from "../components/Stats";
@@ -65,7 +65,7 @@ export default function Home() {
       </header>
 
       <section className="add-book-section">
-        <AddBook onAdd={fetchBooks} />
+        <BookForm onAdd={fetchBooks} />
       </section>
 
       <nav className="view-buttons">
